@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crypto Wallet — тестовый кошелёк</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,sans-serif;background:#0b0f17;color:#f5f7fb;min-height:100vh}main{max-width:980px;margin:auto;padding:28px 18px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px}.logo{font-size:24px;font-weight:800}.badge{font-size:12px;padding:7px 10px;border:1px solid #293348;border-radius:999px;color:#9fb0ca}.hero{padding:34px;border:1px solid #20293a;border-radius:24px;background:linear-gradient(135deg,#121927,#0d121d);box-shadow:0 20px 60px #0005}.hero h1{font-size:42px;margin:0 0 12px}.hero p{color:#aab6ca;line-height:1.6;max-width:680px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}button{border:0;border-radius:12px;padding:13px 18px;font-weight:700;cursor:pointer;background:#fff;color:#111}button.secondary{background:#1a2333;color:#fff;border:1px solid #2c3850}.card{margin-top:18px;padding:22px;border:1px solid #20293a;border-radius:18px;background:#101621}.hidden{display:none}.warning{color:#ffcf70;background:#2a2110;border:1px solid #5b4319;padding:14px;border-radius:12px;margin-top:18px;line-height:1.5}.seed{font-family:ui-monospace,monospace;line-height:1.8;background:#080b11;padding:16px;border-radius:12px;word-break:break-word}.addr{font-family:ui-monospace,monospace;word-break:break-all;color:#a8d7ff}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}.coin{padding:18px;border:1px solid #273146;border-radius:14px}.muted{color:#8290a8;font-size:13px}@media(max-width:700px){.hero h1{font-size:32px}.grid{grid-template-columns:1fr}}
+</style></head>
+<body><main>
+<div class="top"><div class="logo">◈ Crypto Wallet</div><div class="badge">TESTNET MVP</div></div>
+<section class="hero">
+<h1>Твой криптокошелёк</h1>
+<p>Некастодиальный прототип. Ключи и seed-фраза создаются локально в браузере и не отправляются на сервер.</p>
+<div class="actions"><button id="create">Создать кошелёк</button><button id="import" class="secondary">Импорт seed-фразы</button></div>
+<div id="panel" class="hidden">
+<div class="card"><div class="muted">Ethereum-адрес</div><div id="address" class="addr"></div></div>
+<div class="card"><div class="muted">Seed-фраза</div><div id="seed" class="seed"></div><div class="warning">Сохраните seed-фразу офлайн. Никому её не показывайте. Этот MVP не предназначен для хранения реальных средств.</div></div>
+<div class="grid"><div class="coin"><b>ETH</b><div class="muted">Баланс: —</div></div><div class="coin"><b>USDT</b><div class="muted">Баланс: —</div></div><div class="coin"><b>BTC</b><div class="muted">Баланс: —</div></div></div>
+</div></section>
+</main>
+<script type="module">
+import { HDNodeWallet } from 'https://cdn.jsdelivr.net/npm/ethers@6.15.0/+esm';
+const create=document.getElementById('create'), imp=document.getElementById('import'), panel=document.getElementById('panel'), address=document.getElementById('address'), seed=document.getElementById('seed');
+function show(w){panel.classList.remove('hidden');address.textContent=w.address;seed.textContent=w.mnemonic?.phrase||'—';}
+create.onclick=()=>{const w=HDNodeWallet.createRandom();show(w);};
+imp.onclick=()=>{const phrase=prompt('Введите seed-фразу:');if(!phrase)return;try{show(HDNodeWallet.fromPhrase(phrase.trim()));}catch(e){alert('Некорректная seed-фраза');}};
+</script></body></html>
